@@ -26,8 +26,8 @@ HOST = "127.0.0.1"
 serializer = lambda obj: isinstance(obj, (date, datetime, Decimal)) and str(obj)  # noqa
 
 # App
-application = Flask(__name__)
-application.secret_key = os.urandom(24)
+app = Flask(__name__)
+app.secret_key = os.urandom(24)
 
 # Templates
 index_template = """
@@ -40,11 +40,11 @@ index_template = """
 status_template = """<h1>{status}</h1>
 """
 
-@application.route("/")
+@app.route("/")
 def index():
     return index_template
 
-@application.route("/technical_analysis_screener.html")
+@app.route("/technical_analysis_screener.html")
 def TA_Screener():
     logger.debug("Inside TA Screener")
     TA_screener()
@@ -61,7 +61,7 @@ def TA_Screener():
                             target_dict = target_dict,
                             title = 'TA_signal_generator')
 
-@application.route("/download_historic_data")
+@app.route("/download_historic_data")
 def data_download():
     logger.debug("inside data download function")
     status = data_downloader()
@@ -73,4 +73,4 @@ def data_download():
 if __name__ == "__main__":
     # TA_screener(logger)
     logging.info("Starting server: http://{host}:{port}".format(host=HOST, port=PORT))
-    application.run(host= '0.0.0.0')
+    app.run(host= '0.0.0.0')
