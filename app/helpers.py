@@ -50,6 +50,11 @@ def downloadHistoricDataForSymbol(symbol, start_date, end_date, index_flag=False
 	data.reset_index()
 	return data
 
+def downloadHistoricDataForFuture(symbol, start_date, end_date, expiry_date):
+	data = get_history(symbol = symbol, start = start_date, end = end_date, futures = True, expiry_date = expiry_date)
+	data.reset_index()
+	return data
+
 def pastDataForAnInstrument(symbol, exchange, timeframe = 'year'):
 	# reads data for a time frame, convert to numpy array and reverses order
 	instrument_ohlc = readFile("Past_year_moving_data" + "/" + str(symbol) + "_" + exchange)

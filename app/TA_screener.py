@@ -15,6 +15,7 @@ import pandas as pd
 import json
 
 end_date = date.today()
+# print(end_date)
 start_date = end_date - relativedelta(years = 1)
 def TA_screener():
 	TA_results_global = {}

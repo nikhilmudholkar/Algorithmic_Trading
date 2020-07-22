@@ -2,14 +2,19 @@ import os
 import json
 import logging
 import pickle
+import pandas as pd
 from datetime import date, datetime
 from decimal import Decimal
 from TA_screener import TA_screener
 from checklist import checklist
 from flask import Flask, request, jsonify, session
 from flask import render_template
-from data_downloader import data_downloader
+from data_downloader import data_downloader_stock, data_downloader_FnO_historical
+from calender_spreads import calender_spread_spotter
 from stoploss_target import stoploss, target
+from calender_spreads_backtest import run_calender_spreads_backtest, calculate_pl
+from performance_indicators import sharpe_ratio
+from datetime import date, timedelta
 
 print("successfully starrted")
 # logging.basicConfig(filename = "log_file.log",
@@ -31,10 +36,12 @@ app.secret_key = os.urandom(24)
 
 # Templates
 index_template = """
-    <a target="_blank" href="/backtest.json"><h4>Backtest</h4></a>
-    <a target="_blank" href="/download_historic_data"><h4>Download historic data</h4></a>
-    <a target="_blanl" href="/technical_analysis_screener.html"><h4> Technical Analysis Screener</h4></a>
-    <a target="_blanl" href="/dummy_end_point.json"><h4> Dummy End Point</h4></a>
+    <a target="_blank" href="/download_historical_stock_data"><h4>Download historic stock data</h4></a>
+    <a target="_blank" href="/download_historical_FnO_data"><h4>Download historical FnO data</h4></a>
+    <a target="_blank" href="/download_daily_FnO_data"><h4>Download daily FnO data</h4></a>
+    <a target="_blank" href="/technical_analysis_screener.html"><h4> Technical Analysis Screener</h4></a>
+    <a target="_blank" href="/calender_spreads"><h4> Calender Spreads </h4></a>
+    <a target="_blank" href="/calender_spreads_backtest"><h4> Calender Spreads Backtest </h4></a>
     """
 
 status_template = """<h1>{status}</h1>
@@ -42,6 +49,7 @@ status_template = """<h1>{status}</h1>
 
 @app.route("/")
 def index():
+    # status = data_downloader()
     return index_template
 
 @app.route("/technical_analysis_screener.html")
@@ -61,14 +69,51 @@ def TA_Screener():
                             target_dict = target_dict,
                             title = 'TA_signal_generator')
 
-@app.route("/download_historic_data")
-def data_download():
+@app.route("/download_historical_stock_data")
+def data_download_stock():
     logger.debug("inside data download function")
-    status = data_downloader()
+    status = data_downloader_stock()
     if(status == 'success'):
         return status_template.format(status = status)
     else:
         return status_template.format(status = 'fail')
+
+
+@app.route("/download_historical_FnO_data")
+def data_download_FnO():
+    logger.debug("inside data download function")
+    status = data_downloader_FnO_historical()
+    if(status == 'success'):
+        return status_template.format(status = status)
+    else:
+        return status_template.format(status = 'fail')
+
+
+@app.route("/calender_spreads")
+def calender_spreads():
+    result_df = calender_spread_spotter(0)
+    current_date = date.today()
+    date_required = current_date - timedelta()
+    return render_template('df_template.html', date = date_required,  tables=[result_df.to_html(classes='data')], titles=result_df.columns.values)
+
+    # if(status == 'success'):
+    #     return status_template.format(status = status)
+    # else:
+    #     return status_template.format(status = 'fail')
+
+
+@app.route("/calender_spreads_backtest")
+def calender_spreads_backtest():
+    # signals_df = run_calender_spreads_backtest()
+    calculate_pl()
+    trades_df = pd.read_csv('calender_spread_trades.csv')
+    sharpe = sharpe_ratio(trades_df)
+    return render_template('performance_indicator.html',
+                            title = 'Strategy Performance',
+                            sharpe_ratio = sharpe)
+
+
+
 
 if __name__ == "__main__":
     # TA_screener(logger)
