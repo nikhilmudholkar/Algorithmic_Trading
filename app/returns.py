@@ -42,7 +42,7 @@ def returns_per_trade(signal_filename, data_source, wishlist):
             trade_closed_flag = False
             iter = 0
             new_date = date
-            while(trade_closed_flag!= True and iter<28):
+            while(trade_closed_flag!= True):
                 new_date = date + relativedelta(days = iter)
                 new_date = new_date.strftime('%Y-%m-%d')
                 new_date = str(new_date)
@@ -76,16 +76,17 @@ def returns_per_trade(signal_filename, data_source, wishlist):
                             pnl = (entry - stoploss) + (stoploss - temp_diff)
                             exit = temp_diff
 
-                    # to cancel the trade when expiry is reached for current month
-                    if(new_date == expiry_date_curr):
-                        if(signal == 'Buy Spread'):
-                            pnl = temp_diff - entry
-                            exit = temp_diff
-                        if(signal == 'Sell Spread'):
-                            pnl = entry - temp_diff
-                            exit = temp_diff
-                        print(pnl)
-                        break
+                    # to cancel the trade when expiry is reached for current month or trade active for more than 5 days
+                    if(trade_closed_flag==False):
+                        if(new_date == expiry_date_curr or iter>=5):
+                            if(signal == 'Buy Spread'):
+                                pnl = temp_diff - entry
+                                exit = temp_diff
+                            if(signal == 'Sell Spread'):
+                                pnl = entry - temp_diff
+                                exit = temp_diff
+                            print(pnl)
+                            break
                 iter = iter + 1
                 # new_date = datetime.strptime(new_date, '%Y-%m-%d')
             exit_date = new_date

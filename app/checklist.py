@@ -26,7 +26,9 @@ def checklist(TA_results_dict):
         valid_patterns_flag = 0
         s_and_r_flag = 0
         above_avg_volumes_flag = 0
+        # print(candlestick_patterns)
         date = next(iter(candlestick_patterns))
+        # print(date)
 
         if(len(candlestick_patterns[date])!=0):
             valid_patterns_flag = 1

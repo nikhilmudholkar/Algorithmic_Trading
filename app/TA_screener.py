@@ -14,16 +14,17 @@ from indicators import compute_indicators
 import pandas as pd
 import json
 
-end_date = date.today()
+end_date = date.today() + relativedelta(days = 1)
 # print(end_date)
 start_date = end_date - relativedelta(years = 1)
-def TA_screener():
+def TA_screener(lookback_range):
 	TA_results_global = {}
 	count = 0
 	col_name = ['symbol']
 	wishlist_df = pd.read_csv('wishlist.csv', names = col_name)
 	wishlist = wishlist_df.symbol.tolist()
 	for element in wishlist:
+		print(element)
 		TA_results = {}
 		df = pd.read_csv("stock_data/" + element + "_" + str(start_date) + "_" + str(end_date) + ".csv")
 		open = df['Open']
@@ -32,12 +33,14 @@ def TA_screener():
 		close = df['Close']
 		volume = df['Volume']
 		date = df['Date']
+		# print(date)
 		recognised_patterns = pattern_recogniser(open, high, low, close, volume, date)
 		volumes = volume_screener(volume, date)
 		sup_res_dict = sup_res_calculator(close, date)
 		indicators = compute_indicators(open, high, low, close, volume, date)
-		TA_results = globalDictForSingleStock(recognised_patterns, volumes, sup_res_dict, indicators)
+		TA_results = globalDictForSingleStock(recognised_patterns, volumes, sup_res_dict, indicators, lookback_range)
 		TA_results_global[element] = TA_results
+		# break
 
 	writeJsonFile("TA_screener_output.json", TA_results_global)
 	# print(TA_results_global)

@@ -11,7 +11,7 @@ def run_calender_spreads_backtest():
     col_names = ['symbol', 'date', 'expiry_date_curr', 'expiry_date_near', 'closing_price_curr', 'closing_price_near', 'difference', 'mean', 'std', 'upper_range', 'lower_range', 'signal']
     result_df = pd.DataFrame(columns = col_names)
     i = 0
-    while(i<500):
+    while(i<1200):
         temp_result_df = calender_spread_spotter(i)
         # print(temp_result_df)
         result_df = result_df.append(temp_result_df, ignore_index = True )

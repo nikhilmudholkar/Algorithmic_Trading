@@ -10,6 +10,7 @@ def calender_spread_spotter(range):
     with open('wishlist.csv', 'r') as wishlist:
 
         csv_reader = csv.reader(wishlist)
+        # print(type(csv_reader))
         col_names = ['symbol', 'date', 'expiry_date_curr', 'expiry_date_near', 'closing_price_curr', 'closing_price_near', 'difference', 'mean', 'std', 'upper_range', 'lower_range', 'signal', 'entry', 'target', 'stoploss']
         result_df = pd.DataFrame(columns = col_names)
         for element in csv_reader:
@@ -29,6 +30,7 @@ def calender_spread_spotter(range):
                                          'Expiry_y':'near_month_expiry'}, inplace = True)
 
             spreads_df = spreads_df.loc[range:]
+
             spreads_df['difference'] = (spreads_df['near_month_close'] - spreads_df['curr_month_close'])
             spreads_df['difference'] = spreads_df['difference'].round(decimals = 2)
             # diff_mean = round(spreads_df['difference'].loc[:60].mean(), 2)
@@ -41,7 +43,11 @@ def calender_spread_spotter(range):
             diff_std = pd.to_numeric(diff_std)
             upper_range = round(diff_mean + 2.5*diff_std, 2)
             lower_range = round(diff_mean - 2.5*diff_std, 2)
-            current_spread = spreads_df['difference'].iloc[0]
+            try:
+                current_spread = spreads_df['difference'].iloc[0]
+            except:
+                print("exception occured for " + str(symbol) + "for range = " + str(range))
+                continue
             if(current_spread >= upper_range):
                 signal_count = signal_count + 1
                 signal = "Sell Spread"
@@ -73,7 +79,7 @@ def calender_spread_spotter(range):
             if((signal!="no signal") and date != expiry_date_curr):
                 temp_list = [symbol, date, expiry_date_curr, expiry_date_near, closing_price_curr, closing_price_near, current_spread, diff_mean, diff_std, upper_range, lower_range, signal, entry, target, stoploss]
                 result_df.loc[len(result_df)] = temp_list
-            # break;
+            # break
 
             # print("exception occured for: " + str(symbol))
     # print(result_df)

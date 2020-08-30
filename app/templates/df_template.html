@@ -2,10 +2,10 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Calender Spreads</title>
+    <title>{{title}}</title>
 </head>
 <body>
-
+{{date}}
 {% for table in tables %}
             {{titles[loop.index]}}
             {{ table|safe }}

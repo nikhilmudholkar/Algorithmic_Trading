@@ -1,0 +1,2 @@
+Stock_X,Stock_Y,Intercept,Slope,P-Value from ADF test,std_error_of_residuals,latest_residual,std_err_zscore
+NESTLEIND,ITC,444.010845,-0.014847,9.997778e-04,19.15,-9.413179,-0.49

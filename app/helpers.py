@@ -1,16 +1,36 @@
 import logging
 import pickle
 import csv
-# import dateutil.parser as parser
 import numpy as np
 from pathlib import Path
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 from nsepy import get_history
 import json
+import multiprocessing as mp
+from multiprocessing import Process, Pipe
+import multiprocessing.pool
+import timeout_decorator
+import os
+from functools import wraps
+import errno
+import signal
+
 
 exchange_list = ['NSE', 'BSE']
 past_year_moving_data_flag = 0
+
+class NoDaemonProcess(multiprocessing.Process):
+    # make 'daemon' attribute always return False
+    def _get_daemon(self):
+        return False
+    def _set_daemon(self, value):
+        pass
+    daemon = property(_get_daemon, _set_daemon)
+
+class Pool(multiprocessing.pool.Pool):
+    Process = NoDaemonProcess
+
 
 def readFile(filename):
 	with open(filename, 'rb') as fp:
@@ -45,13 +65,15 @@ def flatten(l):
 		except TypeError:
 			yield item
 
-def downloadHistoricDataForSymbol(symbol, start_date, end_date, index_flag=False):
+# @timeout_decorator.timeout(10, use_signals = False)
+def downloadHistoricDataForSymbol(symbol, start_date, end_date, index_flag = False):
 	data = get_history(symbol = symbol, start = start_date, end = end_date, index = index_flag)
 	data.reset_index()
 	return data
 
-def downloadHistoricDataForFuture(symbol, start_date, end_date, expiry_date):
-	data = get_history(symbol = symbol, start = start_date, end = end_date, futures = True, expiry_date = expiry_date)
+# @timeout_decorator.timeout(10, use_signals = False)
+def downloadHistoricDataForFuture(symbol, start_date, end_date, expiry_date, index_flag = False):
+	data = get_history(symbol = symbol, start = start_date, end = end_date, index = index_flag)
 	data.reset_index()
 	return data
 
@@ -92,7 +114,7 @@ def pastDataForAnInstrument(symbol, exchange, timeframe = 'year'):
 	date = date[::-1]
 	return {'open': open, 'high': high, 'low': low, 'close': close, 'volume': volume, 'date': date}
 
-def globalDictForSingleStock(recognised_patterns, volumes, sup_res_dict, indicators):
+def globalDictForSingleStock(recognised_patterns, volumes, sup_res_dict, indicators, lookback_range):
 	global_dict = {}
 	date_list = []
 	recognised_patterns_subdict = {}
@@ -101,7 +123,7 @@ def globalDictForSingleStock(recognised_patterns, volumes, sup_res_dict, indicat
 	indicators_subdict = {}
 	# converting datetime object to string here. Keep a note of this
 	#list of last 10 working dats for an exchange
-	for element in list(reversed(list(recognised_patterns)))[0:1]:
+	for element in list(reversed(list(recognised_patterns)))[0:lookback_range]:
 		date_list.append(element)
 	# most recent first order followed here
 	date_list = date_list[::-1]
@@ -122,3 +144,6 @@ def globalDictForSingleStock(recognised_patterns, volumes, sup_res_dict, indicat
 	global_dict['Indicators'] = indicators_subdict
 
 	return global_dict
+
+# def futuresFairPriceCalc(spot_price, days_to_expiry, dividend):
+# 	fair_price = spot_price *
