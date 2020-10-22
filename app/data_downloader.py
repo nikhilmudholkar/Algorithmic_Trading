@@ -27,7 +27,7 @@ def time_limit(seconds):
 
 def data_downloader_stock():
     end_date = date.today() + relativedelta(days = 1)
-    start_date = end_date - relativedelta(years = 2)
+    start_date = end_date - relativedelta(years = 1)
     print(end_date)
     with open('/home/parallax/algo_trading/app/wishlist.csv', 'r') as wishlist:
         csv_reader = csv.reader(wishlist)

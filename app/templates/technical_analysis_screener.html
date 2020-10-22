@@ -1,28 +1,28 @@
 <!doctype html>
 <html>
 
-  <head>
-    <title>{{title}}</title>
-    <meta charset="utf-8">
-    <meta name="description" content={{description}}>
-  </head>
+<head>
+<title>{{title}}</title>
+<meta charset="utf-8">
+<meta name="description" content={{description}}>
+</head>
 
-  <body>
-        {% for symbol, ta_dict in trades.items() %}
-        <h2>{{symbol}}</h2>
-        <h4>{% for key, val in ta_dict.items() %}</h4>
-            <h4>{{key}}  :  {{val}}</h4>
-            {% endfor %}
-            <!-- <h4>stoploss : {{stoploss_dict[symbol]}}</h4> -->
-            {% for element in stoploss_dict[symbol] %}
-              <h4>Stoploss {{stoploss_dict[symbol].index(element) + 1}} : {{element}}
-            {% endfor %}
-            <h4> Target : {{target_dict[symbol]}}  </h4>
+<body>
+{% for symbol, ta_dict in trades.items() %}
+<h2>{{symbol}}</h2>
+<h4>{% for key, val in ta_dict.items() %}</h4>
+<h4>{{key}}:{{val}}</h4>
+{% endfor %}
+<!-- <h4>stoploss : {{stoploss_dict[symbol]}}</h4> -->
+{% for element in stoploss_dict[symbol] %}
+<h4>Stoploss {{stoploss_dict[symbol].index(element) + 1}} : {{element}}
+{% endfor %}
+<h4> Target : {{target_dict[symbol]}}</h4>
 
 
-            <br>
+<br>
 
-        {% endfor %}
-  </body>
+{% endfor %}
+</body>
 
 </html>

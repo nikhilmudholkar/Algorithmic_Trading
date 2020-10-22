@@ -17,6 +17,7 @@ from performance_indicators import sharpe_ratio
 from datetime import date, timedelta
 from sector_wise_pairs_generator import pairs_generator
 from evaluate_pairs import evaluate_pairs
+# from pair_trading_strategy import pair_trading_strategy
 
 print("successfully starrted")
 # logging.basicConfig(filename = "log_file.log",
@@ -141,17 +142,20 @@ def calender_spreads_backtest():
                             title = 'Strategy Performance',
                             sharpe_ratio = sharpe)
 
-@app.route("/pairs_list")
-def pairs_list_generator():
-    current_date = date.today()
-    date_required = current_date - timedelta(0)
-    pairs_list = pairs_generator('ind_nifty100list.csv')
-    pairs_df = evaluate_pairs(pairs_list)
-    return render_template('df_template.html', date = date_required,  tables=[pairs_df.to_html(classes='data')], titles=pairs_df.columns.values)
-
-
-
-
+# @app.route("/pairs_list")
+# def pairs_list_generator():
+#     current_date = date.today()
+#     date_required = current_date - timedelta(0)
+#     pairs_list = pairs_generator('useful_stocks_list.csv')
+#     pairs_df = evaluate_pairs(pairs_list)
+#     return render_template('df_template.html', date = date_required,  tables=[pairs_df.to_html(classes='data')], titles=pairs_df.columns.values)
+#
+# @app.route("/pair_trades")
+# def pair_trades_generator():
+#     current_date = date.today()
+#     date_required = current_date - timedelta(0)
+#     pair_trades_df = pair_trading_strategy()
+#     return render_template('df_template.html', date = date_required,  tables=[pair_trades_df.to_html(classes='data')], titles=pair_trades_df.columns.values)
 
 
 

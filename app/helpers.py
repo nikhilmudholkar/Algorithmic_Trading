@@ -31,7 +31,6 @@ class NoDaemonProcess(multiprocessing.Process):
 class Pool(multiprocessing.pool.Pool):
     Process = NoDaemonProcess
 
-
 def readFile(filename):
 	with open(filename, 'rb') as fp:
 		itemlist = pickle.load(fp)

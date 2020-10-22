@@ -86,7 +86,8 @@ def evaluate_pairs(pairs_list):
         # print("Is the time series stationary? {0}".format(sTest.isStationary))
         pValue = sTest.pValue
         # print(residuals)
-        if(sTest.isStationary == True):
+        # slope filters because I don't have enough money
+        if(sTest.isStationary == True and slope > 0):
             temp_list = [stock_x, stock_y, intercept, slope, sTest.pValue, std_err_residuals, residuals[-1], std_err_zscore]
             pairs_df.loc[len(pairs_df)] = temp_list
             pairs_df.to_csv('pair_trading_data/pairs.csv', index = False)
@@ -101,5 +102,5 @@ def evaluate_pairs(pairs_list):
 
 
 
-# pairs_list = [['TATASTEEL', 'JSWSTEEL']]
+pairs_list = [['TATASTEEL', 'JSWSTEEL']]
 # evaluate_pairs(pairs_list)
