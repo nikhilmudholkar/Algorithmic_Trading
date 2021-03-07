@@ -1,0 +1,20 @@
+<!doctype html>
+<html>
+
+<head>
+<title>{{title}}</title>
+<meta charset="utf-8">
+<meta name="description" content={{description}}>
+</head>
+
+<body>
+{% for symbol, score in trades.items() %}
+<h2><a target="_blank" href="/TA_analysis/{{symbol}}">{{symbol}}</a></h2>
+<h4> Score = {{score}}</h4>
+
+<br>
+
+{% endfor %}
+</body>
+
+</html>

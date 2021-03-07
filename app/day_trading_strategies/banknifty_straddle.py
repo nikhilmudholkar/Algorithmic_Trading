@@ -143,7 +143,7 @@ if __name__ == '__main__':
         cerebro = bt.Cerebro()
         cerebro.addstrategy(MyStrategy)
         cerebro.addanalyzer(btanalyzers.SharpeRatio, timeframe=bt.TimeFrame.Minutes, compression=1, _name='sharpe')
-        cerebro.addanalyzer(bt.analyzers.PyFolio)
+        cerebro.addanalyzer(bt.analyzers.PyFolio, _name='pyfolio')
         print(element)
         # if(element == 'BANKNIFTY_2019.csv'):
         #     continue
@@ -159,6 +159,10 @@ if __name__ == '__main__':
         print('Sharpe Ration = ' , thestrat.analyzers.sharpe.get_analysis())
         pyfoliozer = thestrat.analyzers.getbyname('pyfolio')
         returns, positions, transactions, gross_lev = pyfoliozer.get_pf_items()
+        print(returns)
+        print(positions)
+        print(transactions)
+        print(gross_lev)
         pf.create_full_tear_sheet(
         returns,
         positions=positions,

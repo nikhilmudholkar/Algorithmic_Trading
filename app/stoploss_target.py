@@ -36,7 +36,7 @@ def stoploss(trades):
                 # print(stoploss)
                 stoploss_list.append(stoploss)
         stoploss_dict[symbol] = stoploss_list
-    print(stoploss_dict)
+    # print(stoploss_dict)
     return stoploss_dict
 
 def target(trades):
@@ -53,5 +53,5 @@ def target(trades):
                     target_dict[symbol] = resistance
                 else:
                     target_dict[symbol] = support
-    print(target_dict)
+    # print(target_dict)
     return target_dict
