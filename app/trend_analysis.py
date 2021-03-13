@@ -11,17 +11,17 @@ from datetime import datetime
 # written differently then plot function because it needs to be calculated for all
 # stocks while plotting is only for specific plots
 def find_trends(data_df):
-    print(data_df)
+    # print(data_df)
     res = trendet.identify_df_trends(df=data_df, column='Close', window_size=3, identify='up')
     if 'Up Trend' not in res:
         res['Up Trend'] = np.nan
     else:
-        print("*****************")
+        pass
     res = trendet.idres = trendet.identify_df_trends(df=data_df, column='Close', window_size=3, identify='up')
     if 'Up Trend' not in res:
         res['Up Trend'] = np.nan
     else:
-        print("*****************")
+        pass
     res = trendet.identify_df_trends(df=res, column='Close',window_size=3, identify='down')
     res.reset_index(inplace=True)
     res_dict = res.groupby('Date')[['Up Trend','Down Trend']].apply(lambda x: x.to_dict('records')[0]).to_dict()
@@ -34,12 +34,12 @@ def plot_trends(data_df):
     if 'Up Trend' not in res:
         res['Up Trend'] = np.nan
     else:
-        print("*****************")
+        pass
     res = trendet.identify_df_trends(df=res, column='Close',window_size=3, identify='down')
     if 'Down Trend' not in res:
         res['Down Trend'] = np.nan
     else:
-        print("*****************")
+        pass
     res.reset_index(inplace=True)
     # res.set_index("Date", inplace = True)
     # print(res.groupby('Date')[['Up Trend','Down Trend']])

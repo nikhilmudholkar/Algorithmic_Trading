@@ -45,7 +45,7 @@ def SandR_calc(stock_data):
 
     # plot_all(stock_data, levels)
     levels_list = [level[1] for level in levels]
-    print(levels_list)
+    # print(levels_list)
     return levels_list, levels
 
 

@@ -1,0 +1,129 @@
+
+a:link, a:visited {
+/*          background-color: #595b5d;
+          color: white;
+*/
+          background-color: #ffffffd6;
+          color: black;
+          border-radius:20px;
+          padding: 5px 15px;
+          text-align: center;
+          text-decoration: none;
+          display: inline-block;
+          font-weight: 500;
+        }
+
+        a:hover, a:active {
+          background-color: #b7b7b7d6;
+        }
+/*
+.floated_left {
+    float:left;
+    margin-right:5px;
+    margin-top: 10px
+}
+
+.floated_center {
+    top: 50%;
+    left: 50%;
+
+    margin-left: 100px
+    margin-top: 10px;
+    margin-left: 10px;
+
+}
+
+.floated_right {
+    float:right;
+    margin-left:5px
+    margin-top:100px
+}
+*/
+
+
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Float four columns side by side */
+.column {
+  float: left;
+  width: 15%;
+  padding: 0 16px 16px 16px;
+}
+
+.column_signals {
+  float: left;
+  width: 30%;
+  padding: 0 16px 16px 16px;
+}
+/* Remove extra left and right margins, due to padding in columns */
+.row {margin: 0 -5px;}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.card {
+  text-decoration: none;
+  margin-left: 10px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); /* this adds the "card" effect */
+  padding: 16px 16px;
+  text-align: center;
+  background-color: #b5b5b5}
+
+
+/*
+/* Style the counter cards */
+.card_bullish {
+  text-decoration: none;
+  margin-left: 10px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); /* this adds the "card" effect */
+  padding: 16px 16px;
+  text-align: center;
+  background-color: #b6e6b3}
+
+.card_bearish {
+  text-decoration: none;
+  margin-left: 10px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); /* this adds the "card" effect */
+  padding: 16px 16px;
+  text-align: center;
+  background-color: #e02a2a2e;
+}
+
+.card_sideways {
+  text-decoration: none;
+  margin-left: 10px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); /* this adds the "card" effect */
+  padding: 16px 16px;
+  text-align: center;
+  background-color: #7b787861;
+}
+
+.check_mark_bullish {
+  color: green;
+}
+
+.check_mark_bearish {
+  color: red;
+}
+
+/* Responsive columns - one column layout (vertical) on small screens */
+@media screen and (max-width: 600px) {
+  .column {
+    width: 100%;
+    display: block;
+    margin-bottom: 20px;
+  }
+}
+
+

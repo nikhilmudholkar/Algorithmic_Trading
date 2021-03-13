@@ -16,6 +16,7 @@ from indicators import compute_indicators
 import pandas as pd
 from checklist import checklist
 from trend_analysis import  find_trends
+from helpers import sort_trades_dict
 
 import json
 
@@ -36,7 +37,7 @@ def TA_screener(lookback_range):
         print(element)
         TA_results = {}
         df = pd.read_csv("stock_data/" + element + "_" + str(start_date) + "_" + str(end_date) + ".csv")
-        print(df)
+        # print(df)
         open = df['Open']
         high = df['High']
         low = df['Low']
@@ -46,6 +47,7 @@ def TA_screener(lookback_range):
         count = count + 1
         trends_dict = find_trends(df)
         recognised_patterns = pattern_recogniser(open, high, low, close, volume, date)
+        # print(recognised_patterns)
         volumes = volume_screener(volume, date)
         SandR_levels= SandR_calc(df)
 
@@ -55,14 +57,17 @@ def TA_screener(lookback_range):
         TA_results = globalDictForSingleStock(recognised_patterns, volumes, sup_res_dict, SandR_levels, indicators, trends_dict, lookback_range)
         # print(TA_results)
         df = df.set_index("Date")
-        trades = checklist(TA_results, df)
+        trades = checklist(TA_results, df, lookback_range)
         TA_results_global[element] = trades
 
-        if count == 5:
-            return TA_results_global
+        # if count == 10:
+        #     break
         # break
 
-
+    # TA_results_sorted = dict(sorted(TA_results_global.items(), key=lambda item : item['Score'][1]))
+    # TA_results_global = TA_results_sorted
+    TA_results_global = sort_trades_dict(TA_results_global)
+    # print(TA_results_global)
     writeJsonFile("TA_screener_output.json", TA_results_global)
     return TA_results_global
 # print(TA_results_global)

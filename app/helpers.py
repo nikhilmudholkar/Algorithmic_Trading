@@ -126,7 +126,8 @@ def pastDataForAnInstrument(symbol, exchange, timeframe='year'):
 	return {'open': open, 'high': high, 'low': low, 'close': close, 'volume': volume, 'date': date}
 
 
-def globalDictForSingleStock(recognised_patterns, volumes, sup_res_dict, SandR_levels, indicators, trends_dict, lookback_range):
+def globalDictForSingleStock(recognised_patterns, volumes, sup_res_dict, SandR_levels, indicators, trends_dict,
+							 lookback_range):
 	global_dict = {}
 	date_list = []
 	recognised_patterns_subdict = {}
@@ -149,17 +150,16 @@ def globalDictForSingleStock(recognised_patterns, volumes, sup_res_dict, SandR_l
 		SandR_levels_dict[str(element)] = SandR_levels
 		# print(trends_dict)
 		trends_subdict[str(element)] = trends_dict[element]
-		print(trends_subdict[str(element)])
+		# print(trends_subdict[str(element)])
 
 	# for indicator_type, indicator_values in indicators.items():
 	# 	dummy_dict = {}
 	# 	for element in date_list:
 	# 		dummy_dict[str(element)] = indicator_values[element]
 
-		# indicators_subdict[indicator_type] = dummy_dict
+	# indicators_subdict[indicator_type] = dummy_dict
 	for element in date_list:
 		indicators_subdict[str(element)] = indicators[element]
-
 
 	global_dict['Candlestick_patterns'] = recognised_patterns_subdict
 	global_dict['Volumes'] = volumes_subdict
@@ -169,3 +169,27 @@ def globalDictForSingleStock(recognised_patterns, volumes, sup_res_dict, SandR_l
 	global_dict['Trends'] = trends_subdict
 
 	return global_dict
+
+
+def sort_trades_dict(trades_dict):
+	scores_dict_bullish = {}
+	scores_dict_bearish = {}
+	scores_dict_sideways = {}
+	for symbol, TA_dict in trades_dict.items():
+		score = TA_dict['Score']
+		if score>0:
+			scores_dict_bullish[symbol] = score
+		elif score<0:
+			scores_dict_bearish[symbol] = score
+		else:
+			scores_dict_sideways[symbol] = score
+
+
+	sorted_dict_bullish = {k: v for k, v in sorted(scores_dict_bullish.items(), key=lambda item: item[1], reverse=True)}
+	sorted_dict_bearish = {k: v for k, v in sorted(scores_dict_bearish.items(), key=lambda item: item[1])}
+	sorted_dict_sideways = scores_dict_sideways
+	# print(sorted_dict)
+	trades_dict['Sorted_dict_bullish'] = sorted_dict_bullish
+	trades_dict['Sorted_dict_bearish'] = sorted_dict_bearish
+	trades_dict['Sorted_dict_sideways'] = sorted_dict_sideways
+	return trades_dict

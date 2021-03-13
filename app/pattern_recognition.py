@@ -16,6 +16,8 @@ def pattern_recogniser(open, high, low, close, volume, date):
     harami = talib.CDLHARAMI(open, high, low, close)
     morning_star = talib.CDLMORNINGSTAR(open, high, low, close, penetration=0.75)
     evening_star = talib.CDLEVENINGSTAR(open, high, low, close, penetration=0.75)
+    # homing_pigeon = talib.CDLHOMINGPIEON(open, high, low, close)
+
     i = 0
     while i < len(date):
         patterns = []
@@ -181,6 +183,21 @@ def pattern_recogniser(open, high, low, close, volume, date):
                 temp_dict[prev_prev_date] = prev_prev_ohlc_list
                 rec_pattern[pattern_name] = temp_dict
             patterns.append(rec_pattern)
+
+
+        # if (homing_pigeon[i] in sentiments):
+        #     rec_pattern = {}
+        #     temp_dict = {}
+        #     pattern_name = "homing pigeon"
+        #     if (i > 0):
+        #         curr_date = date[i]
+        #         curr_ohlc_list = [open[i], high[i], low[i], close[i]]
+        #         prev_date = date[i - 1]
+        #         prev_ohlc_list = [open[i - 1], high[i - 1], low[i - 1], close[i - 1]]
+        #         temp_dict[curr_date] = curr_ohlc_list
+        #         temp_dict[prev_date] = prev_ohlc_list
+        #         rec_pattern[pattern_name] = temp_dict
+        #     patterns.append(rec_pattern)
 
         recognised_patterns[date[i]] = patterns
 

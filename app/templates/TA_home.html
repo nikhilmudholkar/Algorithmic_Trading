@@ -5,16 +5,45 @@
 <title>{{title}}</title>
 <meta charset="utf-8">
 <meta name="description" content={{description}}>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/TA_home.css') }}">
 </head>
 
 <body>
-{% for symbol, score in trades.items() %}
-<h2><a target="_blank" href="/TA_analysis/{{symbol}}">{{symbol}}</a></h2>
-<h4> Score = {{score}}</h4>
-
-<br>
-
-{% endfor %}
+<h2> Bullish Stocks</h2>
+<div class = "row">
+    {% for symbol, score in trades_bullish.items() %}
+    <div class="column">
+        <div class="card_bullish">
+            <a target="_blank" href="/TA_analysis/{{symbol}}">{{symbol}}</a>
+            <p>Score = {{score}}</p>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+<br><br>
+<h2>Bearish Stocks</h2>
+<div class = "row">
+    {% for symbol, score in trades_bearish.items() %}
+    <div class="column">
+        <div class="card_bearish">
+            <a target="_blank" href="/TA_analysis/{{symbol}}">{{symbol}}</a>
+            <p>Score = {{score}}</p>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+<br><br>
+<h2>Sideways Stocks</h2>
+<div class = "row">
+    {% for symbol, score in trades_sideways.items() %}
+    <div class="column">
+        <div class="card_sideways">
+            <a target="_blank" href="/TA_analysis/{{symbol}}">{{symbol}}</a>
+            <p>Score = {{score}}</p>
+        </div>
+    </div>
+    {% endfor %}
+</div>
 </body>
 
 </html>

@@ -2,6 +2,8 @@ import os
 import json
 import logging
 import pickle
+
+import jinja2
 import pandas as pd
 from datetime import date, datetime
 from decimal import Decimal
@@ -20,19 +22,16 @@ from performance_indicators import sharpe_ratio
 from datetime import date, timedelta
 from trend_analysis import plot_trends
 from SandR_fractals import SandR_calc, plot_all
+import logging
 
 # from sector_wise_pairs_generator import pairs_generator
 # from evaluate_pairs import evaluate_pairs
 # from pair_trading_strategy import pair_trading_strategy
 
 print("successfully starrted")
-# logging.basicConfig(filename = "log_file.log",
-#                     format = '%(asctime)s %(message)s',
-#                     filemode = 'w')
-# logging.basicConfig(level=logging.DEBUG)
-# logger = logging.getLogger()
-# logger.setLevel(logging.DEBUG)
-# logger.log("DEBUG")
+logger = logging.getLogger(name=__name__)
+logging.basicConfig(format='%(asctime)s %(levelname)-8s %(message)s', filename='app.log',
+                    level=logging.INFO, datefmt='%Y-%m-%d %H:%M:%S')
 
 # Base settings
 PORT = 5000
@@ -40,7 +39,16 @@ HOST = "127.0.0.1"
 serializer = lambda obj: isinstance(obj, (date, datetime, Decimal)) and str(obj)  # noqa
 
 # App
+# TEMPLATE_DIR = os.path.abspath('../templates')
+# STATIC_DIR = os.path.abspath('../static')
+
 app = Flask(__name__)
+jinja_env = jinja2.Environment(loader=jinja2.FileSystemLoader('templates/'), trim_blocks=True, lstrip_blocks=True)
+app.jinja_env.lstrip_blocks = True
+app.jinja_env.trim_blocks = True
+# app.jinja_env.loader = loader
+
+
 app.secret_key = os.urandom(24)
 
 # Templates
@@ -57,14 +65,96 @@ def index():
 
 @app.route("/TA_analysis")
 def ta_analysis_home():
+    logger.info('TA_analysis started')
     with open('TA_screener_output.json') as json_file:
         trades = json.load(json_file)
-    ta_summary = {}
-    for symbol, analysis in trades.items():
-        ta_summary[symbol] = analysis['Score']
+    # for i in range(1, 10, 1):
+    #     logger.info(f"TA running for lookback period = {i} days")
+    #     trades = TA_screener(i)
+
+    # trades = TA_screener(1)
+    ta_summary_bullish = trades['Sorted_dict_bullish']
+    ta_summary_bearish = trades['Sorted_dict_bearish']
+    ta_summary_sideways = trades['Sorted_dict_sideways']
+    # for symbol, analysis in trades.items():
+    #     ta_summary[symbol] = analysis['Score']
 
     return render_template('TA_home.html',
-                           trades=ta_summary,
+                           trades_bullish=ta_summary_bullish,
+                           trades_bearish=ta_summary_bearish,
+                           trades_sideways=ta_summary_sideways,
+                           title='TA_signal_generator')
+
+
+@app.route("/TA_analysis_bullish_signals")
+def ta_analysis_bullish_signals():
+    with open('TA_screener_output.json') as json_file:
+        trades = json.load(json_file)
+    # trades = TA_screener(1)
+
+    ta_summary_bullish = trades['Sorted_dict_bullish']
+    bullish_signals = {}
+    for symbol, trades_dict in trades.items():
+        temp = {}
+        # print(trades_dict)
+        if 'Sorted_dict' in symbol:
+            continue
+        flags = trades_dict['Flags']
+        score = trades_dict['Score']
+        if score>=3:
+            flag_dict = {}
+            bullish_flag_list = []
+            bearish_flag_list = []
+            for flag in flags:
+                if 'bullish' in flag:
+                    bullish_flag_list.append(flag)
+                if 'bearish' in flag:
+                    bearish_flag_list.append(flag)
+            flag_dict['bullish_flags'] = bullish_flag_list
+            flag_dict['bearish_flags'] = bearish_flag_list
+            temp[score] = flag_dict
+            bullish_signals[symbol] = temp
+            print(bullish_signals)
+
+    return render_template('TA_directional.html',
+                           signal_type='bullish',
+                           trades=bullish_signals,
+                           title='TA_signal_generator')
+
+
+@app.route("/TA_analysis_bearish_signals")
+def ta_analysis_bearish_signals():
+    with open('TA_screener_output.json') as json_file:
+        trades = json.load(json_file)
+    # trades = TA_screener(1)
+    ta_summary_bearish = trades['Sorted_dict_bearish']
+
+    bearish_signals = {}
+    for symbol, trades_dict in trades.items():
+        temp = {}
+        # print(trades_dict)
+        if 'Sorted_dict' in symbol:
+            continue
+        flags = trades_dict['Flags']
+        score = trades_dict['Score']
+        if score <= -3:
+            flag_dict = {}
+            bullish_flag_list = []
+            bearish_flag_list = []
+            for flag in flags:
+                if 'bullish' in flag:
+                    bullish_flag_list.append(flag.replace('bullish',''))
+                if 'bearish' in flag:
+                    bearish_flag_list.append(flag.replace('bearish',''))
+            flag_dict['bullish_flags'] = bullish_flag_list
+            flag_dict['bearish_flags'] = bearish_flag_list
+            temp[score] = flag_dict
+            bearish_signals[symbol] = temp
+            # print(bearish_signals)
+
+    return render_template('TA_directional.html',
+                           signal_type='bearish',
+                           trades=bearish_signals,
                            title='TA_signal_generator')
 
 
@@ -74,7 +164,7 @@ def ta_analysis_symbol(symbol):
         TA_results = json.load(json_file)
 
     data_df = pd.read_csv("stock_data/" + symbol + "_" + str(start_date) + "_" + str(end_date) + ".csv")
-    print(data_df)
+    # print(data_df)
     data_df = data_df.set_index("Date")
     # print(data_df)
 
@@ -87,15 +177,12 @@ def ta_analysis_symbol(symbol):
     bytes_obj_sandr = plot_all(data_df, levels)
     plot_url_sandr = base64.b64encode(bytes_obj_sandr.getvalue()).decode("utf-8")
 
-
     return render_template('TA_symbol.html',
                            symbol=symbol,
                            trades=ta_result,
                            title='TA_symbol_analysis',
                            plot_url_trends=plot_url_trends,
                            plot_url_sandr=plot_url_sandr)
-
-
 
 
 @app.route("/technical_analysis_screener_today.html")

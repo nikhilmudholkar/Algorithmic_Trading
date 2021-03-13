@@ -105,7 +105,7 @@ class MyStrategy(bt.Strategy):
 
             if(curr_time == self.p.market_start):
                 self.p.init_gap = abs(gap)
-                if(gap<=-0.01):
+                if(gap<=-0.02):
                     print(str(gap) + "    " + str(4))
                     print("current open = " + str(data.open[0]))
                     print("previous day close = " + str(prev_close))
