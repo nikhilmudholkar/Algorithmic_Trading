@@ -1,0 +1,23 @@
+<!doctype html>
+<html>
+
+<head>
+<title>{{title}}</title>
+<meta charset="utf-8">
+<meta name="description" content={{description}}>
+</head>
+
+<body>
+<h2>{{symbol}}</h2>
+<h4>{% for key, val in trades.items() %}</h4>
+<h4>{{key}}:{{val}}</h4>
+{% endfor %}
+<br>
+<img src="data:image/png;base64, {{ plot_url_trends }}">
+<br>
+<br>
+<img src="data:image/png;base64, {{ plot_url_sandr }}">
+
+</body>
+
+</html>

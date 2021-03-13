@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+
+<head>
+<title>{{title}}</title>
+<meta charset="utf-8">
+<meta name="description" content={{description}}>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/TA_home.css') }}">
+</head>
+
+<body>
+<h2>{{signal_type}} signals</h2>
+<div class = "row">
+    {% for symbol, score_dict in trades.items() %}
+    <div class="column_signals">
+        <div class="card_{{signal_type}}">
+            <a target="_blank" href="/TA_analysis/{{symbol}}">{{symbol}}</a>
+            {% for score, flag_dict in score_dict.items() %}
+<!--                <p>Score = {{score_dict.keys() | first}}</p>-->
+    <!--            {{score_dict}}-->
+                    <p>Score = {{score}}</p>
+                {% for flag in flag_dict['bullish_flags'] %}
+                    <p>{{flag}} <span class = "check_mark_bullish">&#10004;</span> </p>
+                {% endfor %}
+                {% for flag in flag_dict['bearish_flags'] %}
+                    <p>{{flag}} <span class = "check_mark_bearish">&#10004;</span></p>
+                {% endfor %}
+            {% endfor %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+</body>
+
+</html>

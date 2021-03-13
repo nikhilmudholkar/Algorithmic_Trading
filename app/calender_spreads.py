@@ -30,7 +30,7 @@ def calender_spread_spotter(range):
                                          'Expiry_y':'near_month_expiry'}, inplace = True)
 
             spreads_df = spreads_df.loc[range:]
-
+            print(spreads_df)
             spreads_df['difference'] = (spreads_df['near_month_close'] - spreads_df['curr_month_close'])
             spreads_df['difference'] = spreads_df['difference'].round(decimals = 2)
             # diff_mean = round(spreads_df['difference'].loc[:60].mean(), 2)

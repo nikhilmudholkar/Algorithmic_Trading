@@ -3,8 +3,9 @@
 
 <head>
 <title>{{title}}</title>
-<meta charset="utf-8">
-<meta name="description" content={{description}}>
+    <meta charset="utf-8">
+    <meta name="description" content={{description}}>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/TA_home.css') }}">
 </head>
 
 <body>
@@ -12,24 +13,57 @@
 <br>
 <div>
 <h2>Data Downloads</h2>
-<div style = "margin-left: 100px;">
-<a target="_blank" href="/download_historical_stock_data">Download historic stock data</a>
-<a target="_blank" href="/download_historical_FnO_data" style = "margin-left: 100px;">Download historical FnO data</a>
-<a target="_blank" href="/download_daily_FnO_data" style = "margin-left: 100px;">Download daily FnO data</a>
+<div class="row">
+    <div class="column">
+        <div class="card">
+            <a target="_blank" href="/download_historical_stock_data">Historic Stock Data</a>
+        </div>
+    </div>
+    <div class="column">
+        <div class="card">
+            <a target="_blank" href="/download_historical_FnO_data">Historical FnO Data</a>
+        </div>
+    </div>
+    <div class="column">
+        <div class="card">
+            <a target="_blank" href="/download_daily_FnO_data">Daily FnO Data</a>
+        </div>
+    </div>
 </div>
 <br>
 
 <h2>Technical Analysis</h2>
-<div style = "margin-left: 100px;">
-<a target="_blank" href="/technical_analysis_screener_today.html">Technical Analysis Screener for today</a>
-<a target="_blank" href="/technical_analysis_screener_yesterday.html" style = "margin-left: 100px;">Technical Analysis Screener for yesterday</a>
+<div class="row">
+    <div class="column">
+        <div class="card">
+            <a target="_blank" href="/TA_analysis">Screener</a>
+        </div>
+    </div>
+    <div class="column">
+        <div class="card">
+            <a target="_blank" href="/TA_analysis_bullish_signals">Bullish Signals</a>
+        </div>
+    </div>
+    <div class="column">
+        <div class="card">
+            <a target="_blank" href="/TA_analysis_bearish_signals">Bearish Signals</a>
+        </div>
+    </div>
 </div>
 <br>
 
 <h2>Calender Spreads</h2>
-<div style = "margin-left: 100px;">
-<a target="_blank" href="/calender_spreads" style = "margin-left: 100px;">Calender Spreads</a>
-<a target="_blank" href="/calender_spreads_backtest" style = "margin-left: 100px;">Calender Spreads Backtest</a>
+<div class="row">
+    <div class="column">
+        <div class="card">
+            <a target="_blank" href="/calender_spreads">Calender Spreads</a>
+        </div>
+    </div>
+    <div class="column">
+        <div class="card">
+            <a target="_blank" href="/calender_spreads_backtest">Calender Spreads Backtest</a>
+        </div>
+    </div>
 </div>
 <br>
 
@@ -40,9 +74,17 @@
 <br>
 
 <h2>Pair Trading Strategy</h2>
-<div style = "margin-left: 100px;">
-<a target="_blank" href="/pairs_list" style = "margin-left: 100px;">pairs list</a>
-<a target ="_blank" href="/pair_trades" style = "margin-left: 100px;">pair trades</a>
+<div class="row">
+    <div class="column">
+        <div class="card">
+            <a target="_blank" href="/pairs_list">pairs list</a>
+        </div>
+    </div>
+    <div class="column">
+        <div class="card">
+            <a target ="_blank" href="/pair_trades">pair trades</a>
+        </div>
+    </div>
 </div>
 <br>
 
